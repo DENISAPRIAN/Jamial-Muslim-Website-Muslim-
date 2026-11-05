@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tasbih Digital</title>
+  <meta name="description" content="Tasbih Digital - Website Islami dengan berbagai fitur untuk membantu umat Muslim dalam aktivitas sehari-hari.">
+
+  <!-- Logo Website -->
+  <link rel="icon" type="image/png" href="../foto/logo.png">
+  <link rel="apple-touch-icon" href="../foto/logo.png">
+
+  <!-- Style & Font Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+
+  <!-- Structured Data Google -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Jamial Muslim",
+      "url": "https://jamialmuslim.netlify.app/"
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       1. RESET & MENCEGAH ZOOM PADA HP
+       ========================================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    html, body {
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    body {
+      color: #FFFFFF;
+      background-color: #059669;
+      padding: 15px 10px 100px;
+      position: relative;
+      min-height: 100vh;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    /* Background Pattern Overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("../foto/Unknown.jpeg");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    body > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ==========================================================================
+       2. 3D SCENE & LOGO STYLING
+       ========================================================================== */
+    .scene {
+        width: 100%;
+        max-width: 240px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+        touch-action: none;
+        user-select: none;
+        cursor: grab;
+        margin: 10px auto 5px auto;
+        position: relative;
+        overflow: visible !important;
+    }
+    .scene:active { cursor: grabbing; }
+
+    .glow {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(50px);
+        opacity: .22;
+        animation: pulse 4s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+    .floor-shadow {
+        position: absolute;
+        width: 140px;
+        height: 25px;
+        margin-top: 80px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(18px);
+        opacity: .24;
+        animation: shadow 3s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .logo-3d {
+        position: relative;
+        width: 160px;
+        height: 80px;
+        transform-style: preserve-3d;
+        transform: rotateX(-8deg) rotateY(-18deg);
+        will-change: transform;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-3d img.logo-layer {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: contain !important;
+        display: block;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .logo-depth-1 { transform: translateZ(-14px); filter: brightness(.45) drop-shadow(0 4px 3px rgba(0,0,0,.4)); }
+    .logo-depth-2 { transform: translateZ(-11px); filter: brightness(.50); }
+    .logo-depth-3 { transform: translateZ(-8px); filter: brightness(.56); }
+    .logo-depth-4 { transform: translateZ(-5px); filter: brightness(.62); }
+    .logo-depth-5 { transform: translateZ(-2px); filter: brightness(.70); }
+    .logo-depth-6 { transform: translateZ(-1px); filter: brightness(.82); }
+    .logo-front   { transform: translateZ(0); filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+
+    @keyframes pulse {
+        from { opacity: .14; transform: scale(.82); }
+        to { opacity: .32; transform: scale(1.16); }
+    }
+    @keyframes shadow {
+        0%, 100% { transform: scale(1); opacity: .24; }
+        50% { transform: scale(.72); opacity: .12; }
+    }
+
+    .floating-menu-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 44px;
+      height: 44px;
+      background: #fffffff2;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .floating-menu-btn img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* ==========================================================================
+       3. CONTAINER UTAMA (GLASS CARD)
+       ========================================================================== */
+    .tasbih-container {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 25px 20px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    h3 {
+      font-size: 22px;
+      font-weight: 900;
+      color: #059669;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       4. PILIHAN DZIKIR SELECTOR
+       ========================================================================== */
+    .dzikir-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .dzikir-btn {
+      flex: 1 1 28%;
+      min-width: 80px;
+      padding: 10px 6px;
+      background: #ffffff;
+      border: 1.5px solid rgba(16, 185, 129, 0.25);
+      border-radius: 14px;
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      direction: rtl;
+      font-family: 'Amiri', serif;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .dzikir-btn:hover {
+      background: #f0fdf4;
+      border-color: #10b981;
+    }
+
+    .dzikir-btn.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+    }
+
+    /* ==========================================================================
+       5. COUNTER HITUNGAN
+       ========================================================================== */
+    #counter {
+      font-size: 60px;
+      font-weight: 900;
+      color: #059669;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      text-shadow: 0 2px 10px rgba(5, 150, 105, 0.15);
+    }
+
+    /* ==========================================================================
+       6. TOMBOL UTAMA TASBIH (PREMIUM DESIGN)
+       ========================================================================== */
+    #tasbih-btn {
+      position: relative;
+      width: 175px;
+      height: 175px;
+      background: radial-gradient(circle at 30% 30%, #34d399, #059669 70%, #047857);
+      border: 5px solid rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      direction: rtl;
+      font-family: 'Amiri', serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 15px;
+      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.4),
+                  inset 0 -6px 12px rgba(0, 0, 0, 0.2),
+                  inset 0 6px 12px rgba(255, 255, 255, 0.4);
+      user-select: none;
+      transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s ease;
+    }
+
+    /* Efek Kilau Atas Tombol */
+    #tasbih-btn::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      width: 65%;
+      height: 35%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%);
+      border-radius: 50px 50px 0 0;
+      pointer-events: none;
+    }
+
+    #tasbih-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 18px 35px rgba(5, 150, 105, 0.5),
+                  inset 0 -6px 12px rgba(0, 0, 0, 0.2),
+                  inset 0 6px 12px rgba(255, 255, 255, 0.5);
+    }
+
+    #tasbih-btn:active {
+      transform: scale(0.93);
+      box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3),
+                  inset 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ==========================================================================
+       7. TOMBOL RESET
+       ========================================================================== */
+    .reset-btn {
+      width: 100%;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.5);
+      color: #64748b;
+      border: 1.5px solid rgba(100, 116, 139, 0.35);
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .reset-btn:hover {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    /* ==========================================================================
+       8. BOTTOM NAVIGATION BAR
+       ========================================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      padding: 10px 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .bottom-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 65px;
+      transition: all 0.2s ease;
+    }
+
+    .bottom-nav-btn img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      margin-bottom: 3px;
+    }
+
+    .bottom-nav-btn:hover,
+    .bottom-nav-btn.active {
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       9. RESPONSIVE MOBILE & SIDEBAR
+       ========================================================================== */
+    @media (max-width: 480px) {
+      body { 
+        padding-top: 10px; 
+      }
+
+      .tasbih-container { 
+        padding: 20px 15px; 
+        border-radius: 24px; 
+      }
+
+      h3 { 
+        font-size: 20px; 
+      }
+
+      #counter { 
+        font-size: 52px; 
+        min-height: 60px; 
+      }
+
+      #tasbih-btn { 
+        width: 155px; 
+        height: 155px; 
+        font-size: 16px; 
+      }
+
+      .dzikir-btn { 
+        font-size: 13px; 
+        padding: 8px 4px; 
+      }
+    }
+    
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 82%;
+      max-width: 320px;
+      height: 100%;
+      background:
+        linear-gradient(rgba(248, 249, 249, 0.5), rgba(251, 253, 252, 0.5)),
+        url("../foto/Loo.jpeg") center / cover no-repeat;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 1);
+      z-index: 1002;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu.active {
+      left: 0;
+    }
+
+    .sidebar-content {
+      padding: 10px 20px 30px;
+    }
+
+    .menu-section-title {
+      font-family: 'Cairo', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1b4d3e;
+      margin: 22px 0 12px 0;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 14px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #444444;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .sidebar-nav a:hover {
+      color: #1b4d3e;
+      transform: translateX(4px);
+    }
+
+    .sidebar-nav img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #10b981, #fdfcfc);
+        border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Tombol Menu & Area Logo 3D -->
+  <div class="header-bawah-container">
+    <button id="floatingMenuBtn" class="floating-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+      <img src="../foto/menu.png" alt="Menu">
+    </button>
+
+    <!-- AREA LOGO 3D INTERAKTIF -->
+    <div class="scene" id="scene" aria-label="Logo Jamial Muslim 3D interaktif">
+        <div class="glow"></div>
+        <div class="floor-shadow"></div>
+        
+        <div class="logo-3d" id="logo3d">
+            <!-- KETEBALAN LOGO -->
+            <img src="../foto/Log.png" class="logo-layer logo-depth-1" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-2" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-3" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-4" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-5" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-6" alt="">
+            
+            <!-- LOGO DEPAN -->
+            <img src="../foto/Log.png" class="logo-layer logo-front" alt="Jamial Muslim">
+        </div>
+    </div>
+  </div>
+
+  <!-- Container Utama Tasbih -->
+  <main class="tasbih-container">
+    <h3>Tasbih Digital</h3>
+
+    <!-- 5 Pilihan Dzikir -->
+    <div class="dzikir-selector">
+      <button class="dzikir-btn active" data-teks="سُبْحَانَ اللهِ">سُبْحَانَ اللهِ</button>
+      <button class="dzikir-btn" data-teks="الْحَمْدُ لِلّٰهِ">الْحَمْدُ لِلّٰهِ</button>
+      <button class="dzikir-btn" data-teks="اللّٰهُ أَكْبَرُ">اللّٰهُ أَكْبَرُ</button>
+      <button class="dzikir-btn" data-teks="لَا إِلَٰهَ إِلَّا اللّٰهُ">لَا إِلَٰهَ إِلَّا اللّٰهُ</button>
+      <button class="dzikir-btn" data-teks="أَسْتَغْفِرُ اللّٰهَ">أَسْتَغْفِرُ اللّٰهَ</button>
+    </div>
+
+    <!-- Angka Hitungan -->
+    <div id="counter">0</div>
+
+    <!-- Tombol Utama Tasbih -->
+    <button id="tasbih-btn" type="button">سُبْحَانَ اللهِ</button>
+
+    <!-- Tombol Reset Hitungan -->
+    <button class="reset-btn" type="button" onclick="resetCounter()">Reset Hitungan </button>
+  </main>
+
+  <!-- SIDEBAR MENU -->
+  <div id="sidebarMenu" class="sidebar-menu">
+    <div class="sidebar-header">
+      <div class="sidebar-brand"></div>
+    </div>
+
+    <div class="sidebar-content">
+      <div class="menu-section-title">Dashboard</div>
+      <ul class="sidebar-nav">
+        <li><a href="../index.html"><img src="../foto/home-icon-silhouette.png" alt="Beranda"> <span>Beranda</span></a></li>
+        <li><a href="wudhu.html"><img src="../foto/bills.png" alt="Wudhu"> <span>Panduan Wudhu</span></a></li>
+        <li><a href="doa-sholat.html"><img src="../foto/islam.png" alt="Doa Sholat"> <span>Doa & Praktek Sholat</span></a></li>
+        <li><a href="dzikir.html"><img src="../foto/beads.png" alt="Dzikir"> <span>Dzikir & Hadits</span></a></li>
+        <li><a href="tasbih.html"><img src="../foto/tasbih.png" alt="Tasbih"> <span>Tasbih Digital</span></a></li>
+        <li><a href="kompas.html"><img src="../foto/compass.png" alt="Arah Kiblat"> <span>Arah Kiblat</span></a></li>
+        <li><a href="alquran.html"><img src="../foto/alquran.png" alt="Al-Quran"> <span>Al-Quran</span></a></li>
+        <li><a href="asmaallah.html"><img src="../foto/faith-in-allah.png" alt="Asmaulhusna"> <span>Asmaulhusna</span></a></li>
+        <li><a href="hijriah.html"><img src="../foto/calendar.png" alt="Kalender"> <span>Kalender Hijriah</span></a></li>
+        <li><a href="tahlil.html"><img src="../foto/cemetery.png" alt="Tahlil"> <span>Tahlil</span></a></li>
+        <li><a href="nama-namanabi.html"><img src="../foto/people.png" alt="Nabi"> <span>Nama-Nama Nabi</span></a></li>
+        <li><a href="malaikat.html"><img src="../foto/angel.png" alt="Malaikat"> <span>Nama-Nama Malaikat</span></a></li>
+        <li><a href="zakat.html"><img src="../foto/transference.png" alt="Zakat"> <span>Kalkulator Zakat</span></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OVERLAY BACKGROUND GELAP -->
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <a href="../index.html" class="bottom-nav-btn active" title="Home">
+      <img src="../foto/home-icon-silhouette.png" alt="Home">
+      <span>Home</span>
+    </a>
+  </nav>
+
+  <!-- Script Logika Tasbih & 3D Logo -->
+  <script>
+    let count = 0;
+    const counterEl = document.getElementById("counter");
+    const tasbihBtn = document.getElementById("tasbih-btn");
+    const dzikirBtns = document.querySelectorAll(".dzikir-btn");
+
+    // Tambah hitungan saat tombol diklik
+    tasbihBtn.addEventListener("click", () => {
+      count++;
+      counterEl.innerText = count;
+    });
+
+    // Pindah jenis dzikir
+    dzikirBtns.forEach(btn => {
+      btn.addEventListener("click", function() {
+        dzikirBtns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+
+        const teksDzikir = this.getAttribute("data-teks");
+        tasbihBtn.innerText = teksDzikir;
+
+        resetCounter();
+      });
+    });
+
+    // Reset Hitungan
+    function resetCounter() {
+      count = 0;
+      counterEl.innerText = count;
+    }
+
+    // 3D Logo Interactive & Auto Rotate Logic (Bolak-balik Kanan-Kiri)
+    const logo = document.getElementById("logo3d");
+    const scene = document.getElementById("scene");
+
+    let rotX = -20;
+    let rotY = -28;
+    let targetX = rotX;
+    let targetY = rotY;
+
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let lastMove = 0;
+    let lastTime = 0;
+    let autoRotate = true;
+
+    let rotateDirection = 1; // 1 = ke kanan, -1 = ke kiri
+    const maxAngleY = 45;    
+    const minAngleY = -45;   
+    const rotateSpeed = 0.6; 
+
+    function render(time = 0) {
+        const dt = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
+        lastTime = time;
+
+        if (!dragging) {
+            if (autoRotate) {
+                targetY += rotateSpeed * rotateDirection * dt;
+
+                if (targetY >= maxAngleY) {
+                    targetY = maxAngleY;
+                    rotateDirection = -1;
+                } else if (targetY <= minAngleY) {
+                    targetY = minAngleY;
+                    rotateDirection = 1;
+                }
+            }
+
+            targetX += velocityX * dt;
+            targetY += velocityY * dt;
+
+            velocityX *= Math.pow(.94, dt);
+            velocityY *= Math.pow(.94, dt);
+
+            if (Math.abs(velocityX) < .01) velocityX = 0;
+            if (Math.abs(velocityY) < .01) velocityY = 0;
+        }
+
+        rotX += (targetX - rotX) * Math.min(1, .16 * dt);
+        rotY += (targetY - rotY) * Math.min(1, .16 * dt);
+
+        if (logo) {
+            logo.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        }
+
+        requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+
+    if (scene) {
+        scene.addEventListener("pointerdown", (e) => {
+            if (e.pointerType === "mouse" && e.button !== 0) return;
+            dragging = true;
+            autoRotate = false;
+            previousX = e.clientX;
+            previousY = e.clientY;
+            lastMove = performance.now();
+            velocityX = 0;
+            velocityY = 0;
+            scene.setPointerCapture(e.pointerId);
+            scene.style.cursor = "grabbing";
+        });
+
+        scene.addEventListener("pointermove", (e) => {
+            if (!dragging) return;
+
+            const dx = e.clientX - previousX;
+            const dy = e.clientY - previousY;
+
+            targetY += dx * .8;
+            targetX -= dy * .8;
+
+            const now = performance.now();
+            const elapsed = Math.max(1, now - lastMove);
+
+            velocityY = (dx * .8) / (elapsed / 16.67);
+            velocityX = (-dy * .8) / (elapsed / 16.67);
+
+            previousX = e.clientX;
+            previousY = e.clientY;
+            lastMove = now;
+        });
+
+        function stopDrag() {
+            if (!dragging) return;
+            dragging = false;
+            scene.style.cursor = "grab";
+            autoRotate = true;
+        }
+
+        scene.addEventListener("pointerup", stopDrag);
+        scene.addEventListener("pointercancel", stopDrag);
+        scene.addEventListener("lostpointercapture", stopDrag);
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (sidebar) {
+            sidebar.classList.toggle('active');
+        }
+        if (overlay) {
+            overlay.classList.toggle('active');
+        }
+        document.body.classList.toggle('no-scroll');
+    }
+  </script>
+  <script src="../script.js"></script>
+  <script src="../voice-assistant.js"></script>
+</body>
+</html>

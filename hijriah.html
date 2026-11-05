@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender Hijriah</title>
+    <meta name="description" content="Kalender Hijriah - Website Islami dengan berbagai fitur untuk membantu umat Muslim dalam aktivitas sehari-hari.">
+ 
+    <!-- Logo website -->
+    <link rel="icon" type="image/png" href="../foto/logo.png">
+    <link rel="apple-touch-icon" href="../foto/logo.png">
+ 
+    <link rel="stylesheet" href="../style.css">
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+ 
+    <!-- Informasi website untuk Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Jamial Muslim",
+        "url": "https://jamialmuslim.netlify.app/"
+      }
+    </script>
+    <style>
+        /* RESET */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            color: #000000;
+            background-color: #059669;
+            padding: 10px;
+            padding-bottom: 90px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("../foto/Unknown.jpeg");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            opacity: 0.8; 
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        body > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .current-date {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 400;
+            color: #1e293b;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            background: linear-gradient(145deg, #10b981, #059669);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 8px 25px rgba(16, 185, 129, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 
+                0 15px 35px rgba(16, 185, 129, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .month-year {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 200px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar {
+            padding: 25px;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .day-header {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .day-cell.empty {
+            background: transparent;
+            cursor: default;
+            border: none;
+        }
+
+        .day-cell:hover:not(.empty) {
+            transform: scale(1.1);
+            background: linear-gradient(145deg, #10b981, #059669);
+            color: white;
+            box-shadow: 
+                0 8px 25px rgba(16, 185, 129, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .day-cell.today {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            color: white;
+            font-weight: 700;
+            box-shadow: 
+                0 0 20px rgba(245, 158, 11, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(245, 158, 11, 0.5);
+        }
+
+        .day-cell.holiday {
+            background: linear-gradient(145deg, #ec4899, #db2777);
+            color: white;
+            font-weight: 700;
+            box-shadow: 
+                0 0 20px rgba(236, 72, 153, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(236, 72, 153, 0.4);
+        }
+
+        .day-gregorian {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .hijri-month {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(145deg, #10b981, #059669);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Event info */
+        .event-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.7);
+            animation: modalPop 0.4s ease-out forwards;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            position: relative;
+        }
+
+        @keyframes modalPop {
+            to { transform: scale(1); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover { 
+            color: #10b981; 
+        }
+
+        .footer {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.9));
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            font-weight: 300;
+            box-shadow: 0 -5px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        /* SCROLLBAR CUSTOM */
+        .calendar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .calendar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .calendar::-webkit-scrollbar-thumb {
+            background: linear-gradient(145deg, #10b981, #059669);
+            border-radius: 10px;
+        }
+
+        /* 3D SCENE & LOGO STYLING */
+        .scene {
+            width: 100%;
+            max-width: 240px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+            touch-action: none;
+            user-select: none;
+            cursor: grab;
+            margin: 10px auto 5px auto;
+            position: relative;
+            overflow: visible !important;
+        }
+
+        .scene:active {
+            cursor: grabbing;
+        }
+
+        .glow {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #059669;
+            filter: blur(50px);
+            opacity: .22;
+            animation: pulse 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .floor-shadow {
+            position: absolute;
+            width: 140px;
+            height: 25px;
+            margin-top: 80px;
+            border-radius: 50%;
+            background: #059669;
+            filter: blur(18px);
+            opacity: .24;
+            animation: shadow 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .logo-3d {
+            position: relative;
+            width: 160px;
+            height: 80px;
+            transform-style: preserve-3d;
+            transform: rotateX(-8deg) rotateY(-18deg);
+            will-change: transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-3d img.logo-layer {
+            position: absolute;
+            inset: 0;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            object-fit: contain !important;
+            display: block;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        .logo-depth-1 { transform: translateZ(-14px); filter: brightness(.45) drop-shadow(0 4px 3px rgba(0,0,0,.4)); }
+        .logo-depth-2 { transform: translateZ(-11px); filter: brightness(.50); }
+        .logo-depth-3 { transform: translateZ(-8px); filter: brightness(.56); }
+        .logo-depth-4 { transform: translateZ(-5px); filter: brightness(.62); }
+        .logo-depth-5 { transform: translateZ(-2px); filter: brightness(.70); }
+        .logo-depth-6 { transform: translateZ(-1px); filter: brightness(.82); }
+        .logo-front   { transform: translateZ(0); filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+
+        @keyframes pulse {
+            from { opacity: .14; transform: scale(.82); }
+            to { opacity: .32; transform: scale(1.16); }
+        }
+
+        @keyframes shadow {
+            0%, 100% { transform: scale(1); opacity: .24; }
+            50% { transform: scale(.72); opacity: .12; }
+        }
+
+        .floating-menu-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 44px;
+            height: 44px;
+            background: #fffffff2;
+            color: #FFFFFF;
+            border: 1px solid #FFFFFF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            padding: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .floating-menu-btn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        /* BOTTOM NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 70px;
+            max-width: 130px;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-btn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            margin-bottom: 4px;
+        }
+
+        .bottom-nav-btn span {
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .bottom-nav-btn:hover,
+        .bottom-nav-btn.active {
+            color: #1e293b;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 480px) {
+            .bottom-nav {
+                gap: 10px;
+                padding: 9px 4px;
+            }
+            .bottom-nav-btn {
+                font-size: 10px;
+                min-width: 65px;
+                max-width: 105px;
+            }
+            .bottom-nav-btn img {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 82%;
+            max-width: 320px;
+            height: 100%;
+            background:
+                linear-gradient(rgba(248, 249, 249, 0.5), rgba(251, 253, 252, 0.5)),
+                url("../foto/Loo.jpeg") center / cover no-repeat;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 1);
+            z-index: 1002;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu.active {
+            left: 0;
+        }
+
+        .sidebar-content {
+            padding: 10px 20px 30px;
+        }
+
+        .menu-section-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1b4d3e;
+            margin: 22px 0 12px 0;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 14px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: #444444;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .sidebar-nav a:hover {
+            color: #1b4d3e;
+            transform: translateX(4px);
+        }
+
+        .sidebar-nav img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.5rem; }
+            .calendar { padding: 20px 15px; }
+            .month-year { font-size: 1.1rem; }
+            .container { margin: 10px; width: calc(100% - 20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bawah-container">
+        <button id="floatingMenuBtn" class="floating-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+            <img src="../foto/menu.png" alt="Menu">
+        </button>
+
+        <!-- AREA LOGO 3D INTERAKTIF -->
+        <div class="scene" id="scene" aria-label="Logo Jamial Muslim 3D interaktif">
+            <div class="glow"></div>
+            <div class="floor-shadow"></div>
+            
+            <div class="logo-3d" id="logo3d">
+                <!-- KETEBALAN LOGO -->
+                <img src="../foto/log.png" class="logo-layer logo-depth-1" alt="">
+                <img src="../foto/log.png" class="logo-layer logo-depth-2" alt="">
+                <img src="../foto/log.png" class="logo-layer logo-depth-3" alt="">
+                <img src="../foto/log.png" class="logo-layer logo-depth-4" alt="">
+                <img src="../foto/log.png" class="logo-layer logo-depth-5" alt="">
+                <img src="../foto/log.png" class="logo-layer logo-depth-6" alt="">
+                
+                <!-- LOGO DEPAN -->
+                <img src="../foto/log.png" class="logo-layer logo-front" alt="Jamial Muslim">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Kalender Hijriah</h1>
+            <div class="current-date" id="currentDate">Muharram 1446 H</div>
+        </div>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="prevMonth()">←</button>
+            <div class="month-year" id="monthYear">Muharram 1446 H</div>
+            <button class="nav-btn" onclick="nextMonth()">→</button>
+            <button class="nav-btn" onclick="today()">𖠿</button>
+        </div>
+
+        <div class="calendar">
+            <div class="calendar-header">
+                <div class="day-header">Min</div>
+                <div class="day-header">Sen</div>
+                <div class="day-header">Sel</div>
+                <div class="day-header">Rab</div>
+                <div class="day-header">Kam</div>
+                <div class="day-header">Jum</div>
+                <div class="day-header">Sab</div>
+            </div>
+            <div class="days-grid" id="daysGrid"></div>
+        </div>
+
+        <div class="footer">
+            <p>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ<br>
+            <strong>الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</strong><br>
+            <small>Islamic Calendar 1446 H | Hijri & Gregorian</small>
+            </p>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="event-modal" id="eventModal">
+        <div class="event-card">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h3 id="eventTitle"></h3>
+            <p id="eventDesc"></p>
+            <div style="margin-top: 20px; font-size: 0.9rem; color: #57606f;">
+                <strong>Hijriah:</strong> <span id="eventHijri"></span><br>
+                <strong>Masehi:</strong> <span id="eventGreg"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div id="sidebarMenu" class="sidebar-menu">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"></div>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="menu-section-title">Dashboard</div>
+            <ul class="sidebar-nav">
+                <li><a href="../index.html"><img src="../foto/home-icon-silhouette.png" alt="Beranda"> <span>Beranda</span></a></li>
+                <li><a href="wudhu.html"><img src="../foto/bills.png" alt="Wudhu"> <span>Panduan Wudhu</span></a></li>
+                <li><a href="doa-sholat.html"><img src="../foto/islam.png" alt="Doa Sholat"> <span>Doa & Praktek Sholat</span></a></li>
+                <li><a href="dzikir.html"><img src="../foto/beads.png" alt="Dzikir"> <span>Dzikir & Hadits</span></a></li>
+                <li><a href="tasbih.html"><img src="../foto/tasbih.png" alt="Tasbih"> <span>Tasbih Digital</span></a></li>
+                <li><a href="kompas.html"><img src="../foto/compass.png" alt="Arah Kiblat"> <span>Arah Kiblat</span></a></li>
+                <li><a href="alquran.html"><img src="../foto/alquran.png" alt="Al-Quran"> <span>Al-Quran</span></a></li>
+                <li><a href="asmaallah.html"><img src="../foto/faith-in-allah.png" alt="Asmaulhusna"> <span>Asmaulhusna</span></a></li>
+                <li><a href="hijriah.html"><img src="../foto/calendar.png" alt="Kalender"> <span>Kalender Hijriah</span></a></li>
+                <li><a href="tahlil.html"><img src="../foto/cemetery.png" alt="Tahlil"> <span>Tahlil</span></a></li>
+                <li><a href="nama-namanabi.html"><img src="../foto/people.png" alt="Nabi"> <span>Nama-Nama Nabi</span></a></li>
+                <li><a href="malaikat.html"><img src="../foto/angel.png" alt="Malaikat"> <span>Nama-Nama Malaikat</span></a></li>
+                <li><a href="zakat.html"><img src="../foto/transference.png" alt="Zakat"> <span>Kalkulator Zakat</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- OVERLAY BACKGROUND GELAP -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <a href="../index.html" class="bottom-nav-btn active" title="Home">
+            <img src="../foto/home-icon-silhouette.png" alt="Home">
+            <span>Home</span>
+        </a>
+    </nav>
+
+    <!-- SCRIPT -->
+    <script>
+        // Hijriah Holidays & Events 1446 H
+        const hijriEvents = {
+            '01-01': { title: '1 Muharram', desc: 'Tahun Baru Hijriah 1446 H', type: 'holiday' },
+            '10-01': { title: 'Aswura', desc: 'Puasa sunnah 10 Muharram', type: 'holiday' },
+            '01-12': { title: '1 Rabiul Awwal', desc: 'Mawlid Nabi Muhammad SAW', type: 'holiday' },
+            '12-12': { title: '12 Rabiul Awwal', desc: 'Kelahiran Rasulullah SAW (Sunni)', type: 'holiday' },
+            '27-02': { title: 'Isra Miraj', desc: 'Perjalanan malam Nabi SAW', type: 'holiday' },
+            '01-09': { title: '1 Ramadan', desc: 'Awal bulan puasa', type: 'holiday' },
+            '27-09': { title: 'Lailatul Qadar', desc: 'Malam kemuliaan (malam ganjil)', type: 'holiday' },
+            '01-10': { title: '1 Syawal', desc: 'Idul Fitri 1446 H - Hari Raya', type: 'holiday' },
+            '10-12': { title: '10 Zulhijjah', desc: 'Idul Adha - Hari Raya Kurban', type: 'holiday' },
+            '08-12': { title: 'Tarwiyah', desc: 'Haji - 8 Zulhijjah', type: 'holiday' },
+            '09-12': { title: 'Arafah', desc: 'Puncak haji - Puasa sunnah', type: 'holiday' }
+        };
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function generateCalendar() {
+            const daysGrid = document.getElementById('daysGrid');
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            let html = '';
+            const today = new Date();
+
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const isCurrentMonth = date.getMonth() === firstDay.getMonth();
+                const isToday = date.toDateString() === today.toDateString();
+                
+                const dayNum = date.getDate();
+                const gregMonth = date.toLocaleDateString('id-ID', { month: 'short' });
+                
+                const hijriDay = dayNum + 11;
+                const hijriMonthNames = ['Muharram', 'Safar', 'Rabiul Awwal', 'Rabiul Akhir', 'Jumadil Awwal', 
+                                       'Jumadil Akhir', 'Rajab', 'Sya\'ban', 'Ramadan', 'Syawal', 'Zulqa\'dah', 'Zulhijjah'];
+                const hijriMonth = hijriMonthNames[Math.floor(Math.random() * 12)];
+                
+                const hijriKey = `${hijriDay}-${Math.floor(Math.random() * 12) + 1}`;
+                const event = hijriEvents[hijriKey];
+
+                let cellClass = 'day-cell';
+                if (!isCurrentMonth) cellClass += ' empty';
+                if (isToday) cellClass += ' today';
+                if (event && event.type === 'holiday') cellClass += ' holiday';
+
+                html += `
+                    <div class="${cellClass}" onclick="${isCurrentMonth ? `showEvent(${date.getTime()})` : ''}">
+                        <div>${isCurrentMonth ? dayNum : ''}</div>
+                        ${isCurrentMonth ? `<div class="day-gregorian">${gregMonth}</div>` : ''}
+                        ${event ? `<div class="hijri-month">${event.title.split(' ')[0]}</div>` : ''}
+                    </div>
+                `;
+            }
+
+            daysGrid.innerHTML = html;
+            updateHeader();
+        }
+
+        function updateHeader() {
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const hijriYear = currentYear + 622 - 33;
+            const hijriMonthNames = ['Muharram', 'Safar', 'Rabiul Awwal', 'Rabiul Akhir', 
+                                   'Jumadil Awwal', 'Jumadil Akhir', 'Rajab', 'Sya\'ban', 
+                                   'Ramadan', 'Syawal', 'Zulqa\'dah', 'Zulhijjah'];
+            
+            document.getElementById('monthYear').textContent = 
+                `${months[currentMonth]} ${currentYear} | ${hijriMonthNames[currentMonth]} ${hijriYear} H`;
+            
+            const now = new Date();
+            document.getElementById('currentDate').textContent = 
+                `${now.toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}`;
+        }
+
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+
+        function today() {
+            currentMonth = new Date().getMonth();
+            currentYear = new Date().getFullYear();
+            generateCalendar();
+        }
+
+        function showEvent(timestamp) {
+            const date = new Date(timestamp);
+            const hijriKey = `${date.getDate()}-${date.getMonth() + 1}`;
+            const event = hijriEvents[hijriKey];
+            
+            if (event) {
+                document.getElementById('eventTitle').textContent = event.title;
+                document.getElementById('eventDesc').textContent = event.desc;
+                document.getElementById('eventHijri').textContent = event.title;
+                document.getElementById('eventGreg').textContent = date.toLocaleDateString('id-ID');
+                document.getElementById('eventModal').style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        document.getElementById('eventModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        generateCalendar();
+
+        // 3D Logo Interactive & Auto Rotate Logic (Bolak-balik Kanan-Kiri)
+        const logo = document.getElementById("logo3d");
+        const scene = document.getElementById("scene");
+
+        let rotX = -20;
+        let rotY = -28;
+        let targetX = rotX;
+        let targetY = rotY;
+
+        let dragging = false;
+        let previousX = 0;
+        let previousY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
+        let lastMove = 0;
+        let lastTime = 0;
+        let autoRotate = true;
+
+        let rotateDirection = 1; // 1 = ke kanan, -1 = ke kiri
+        const maxAngleY = 45;    
+        const minAngleY = -45;   
+        const rotateSpeed = 0.6; 
+
+        function render(time = 0) {
+            const dt = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
+            lastTime = time;
+
+            if (!dragging) {
+                if (autoRotate) {
+                    targetY += rotateSpeed * rotateDirection * dt;
+
+                    if (targetY >= maxAngleY) {
+                        targetY = maxAngleY;
+                        rotateDirection = -1;
+                    } else if (targetY <= minAngleY) {
+                        targetY = minAngleY;
+                        rotateDirection = 1;
+                    }
+                }
+
+                targetX += velocityX * dt;
+                targetY += velocityY * dt;
+
+                velocityX *= Math.pow(.94, dt);
+                velocityY *= Math.pow(.94, dt);
+
+                if (Math.abs(velocityX) < .01) velocityX = 0;
+                if (Math.abs(velocityY) < .01) velocityY = 0;
+            }
+
+            rotX += (targetX - rotX) * Math.min(1, .16 * dt);
+            rotY += (targetY - rotY) * Math.min(1, .16 * dt);
+
+            if (logo) {
+                logo.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+
+        if (scene) {
+            scene.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                dragging = true;
+                autoRotate = false;
+                previousX = e.clientX;
+                previousY = e.clientY;
+                lastMove = performance.now();
+                velocityX = 0;
+                velocityY = 0;
+                scene.setPointerCapture(e.pointerId);
+                scene.style.cursor = "grabbing";
+            });
+
+            scene.addEventListener("pointermove", (e) => {
+                if (!dragging) return;
+
+                const dx = e.clientX - previousX;
+                const dy = e.clientY - previousY;
+
+                targetY += dx * .8;
+                targetX -= dy * .8;
+
+                const now = performance.now();
+                const elapsed = Math.max(1, now - lastMove);
+
+                velocityY = (dx * .8) / (elapsed / 16.67);
+                velocityX = (-dy * .8) / (elapsed / 16.67);
+
+                previousX = e.clientX;
+                previousY = e.clientY;
+                lastMove = now;
+            });
+
+            function stopDrag() {
+                if (!dragging) return;
+                dragging = false;
+                scene.style.cursor = "grab";
+                autoRotate = true;
+            }
+
+            scene.addEventListener("pointerup", stopDrag);
+            scene.addEventListener("pointercancel", stopDrag);
+            scene.addEventListener("lostpointercapture", stopDrag);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
+            if (overlay) {
+                overlay.classList.toggle('active');
+            }
+            document.body.classList.toggle('no-scroll');
+        }
+    </script>
+    <script src="../script.js"></script>
+    <script src="../voice-assistant.js"></script>
+</body>
+</html>

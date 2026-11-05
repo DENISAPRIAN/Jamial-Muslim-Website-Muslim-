@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nama-nama Malaikat</title>
+    <meta name="description" content="Nama nama malaikat - Website Islami dengan berbagai fitur untuk membantu umat Muslim dalam aktivitas sehari-hari.">
+ 
+    <!-- Logo website -->
+    <link rel="icon" type="image/png" href="../foto/logo.png">
+    <link rel="apple-touch-icon" href="../foto/logo.png">
+ 
+    <link rel="stylesheet" href="../style.css">
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+ 
+    <!-- Informasi website untuk Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Jamial Muslim",
+        "url": "https://jamialmuslim.netlify.app/"
+      }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+          color: #FFFFFF;
+          background-color: #059669;
+          padding: 10px;
+          padding-bottom: 90px;
+          position: relative;
+          min-height: 100vh;
+        }
+
+        body::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          background-image: url("../foto/Unknown.jpeg");
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          opacity: 0.8; 
+          mix-blend-mode: multiply;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        body > * {
+          position: relative;
+          z-index: 2;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: clamp(20px, 3.5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: clamp(12px, 2vw, 14px);
+            opacity: 0.9;
+        }
+
+        /* LAYOUT 1 BARIS 1 KOTAK (1 KOLOM) */
+        .malaikat-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 80px;
+        }
+
+        /* KOTAK PERSEGI PANJANG PIPIH (HORIZONTAL LIST ITEM) */
+        .malaikat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 10px;
+            padding: 8px 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 100%;
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+        }
+
+        .malaikat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.98), rgba(5, 150, 105, 0.95));
+            transition: width 0.3s ease;
+        }
+
+        .malaikat-card:hover::before {
+            width: 8px;
+        }
+
+        /* NOMOR KECIL BADGE */
+        .malaikat-nomor {
+            font-size: 11px;
+            color: #059669;
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.12);
+            padding: 3px 8px;
+            border-radius: 6px;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        /* CONTAINER NAMA & TUGAS (SEJAJAR HORIZONAL) */
+        .card-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+            gap: 10px;
+        }
+
+        /* NAMA MALAIKAT */
+        .malaikat-nama {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1f2937;
+            white-space: nowrap;
+        }
+
+        /* TUGAS */
+        .malaikat-tugas {
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* HOVER EFFECT */
+        .malaikat-card:hover {
+            transform: translateX(3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        /* RESPONSIVE DESIGN UNTUK HP */
+        @media (max-width: 480px) {
+            .malaikat-card {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            
+            .malaikat-nama {
+                font-size: 11.5px;
+            }
+            
+            .malaikat-tugas {
+                font-size: 10.5px;
+            }
+
+            .malaikat-nomor {
+                font-size: 10px;
+                padding: 2px 6px;
+                min-width: 28px;
+            }
+        }
+
+        /* ANIMASI MASUK */
+        .malaikat-card {
+            animation: fadeInUp 0.3s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .malaikat-card:nth-child(n+1) { animation-delay: 0.02s; }
+        .malaikat-card:nth-child(n+6) { animation-delay: 0.04s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #10b981, #f8f8f7);
+            border-radius: 10px;
+        }
+
+        .malaikat-card:active {
+            transform: scale(0.98);
+        }
+
+        /* 3D SCENE & LOGO STYLING */
+        .scene {
+            width: 100%;
+            max-width: 240px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+            touch-action: none;
+            user-select: none;
+            cursor: grab;
+            margin: 10px auto 5px auto;
+            position: relative;
+            overflow: visible !important;
+        }
+        .scene:active { cursor: grabbing; }
+
+        .glow {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #059669;
+            filter: blur(50px);
+            opacity: .22;
+            animation: pulse 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .floor-shadow {
+            position: absolute;
+            width: 140px;
+            height: 25px;
+            margin-top: 80px;
+            border-radius: 50%;
+            background: #059669;
+            filter: blur(18px);
+            opacity: .24;
+            animation: shadow 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .logo-3d {
+            position: relative;
+            width: 160px;
+            height: 80px;
+            transform-style: preserve-3d;
+            transform: rotateX(-8deg) rotateY(-18deg);
+            will-change: transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-3d img.logo-layer {
+            position: absolute;
+            inset: 0;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            object-fit: contain !important;
+            display: block;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        .logo-depth-1 { transform: translateZ(-14px); filter: brightness(.45) drop-shadow(0 4px 3px rgba(0,0,0,.4)); }
+        .logo-depth-2 { transform: translateZ(-11px); filter: brightness(.50); }
+        .logo-depth-3 { transform: translateZ(-8px); filter: brightness(.56); }
+        .logo-depth-4 { transform: translateZ(-5px); filter: brightness(.62); }
+        .logo-depth-5 { transform: translateZ(-2px); filter: brightness(.70); }
+        .logo-depth-6 { transform: translateZ(-1px); filter: brightness(.82); }
+        .logo-front   { transform: translateZ(0); filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+
+        @keyframes pulse {
+            from { opacity: .14; transform: scale(.82); }
+            to { opacity: .32; transform: scale(1.16); }
+        }
+        @keyframes shadow {
+            0%, 100% { transform: scale(1); opacity: .24; }
+            50% { transform: scale(.72); opacity: .12; }
+        }
+
+        .floating-menu-btn {
+          position: absolute;
+          top: 15px;
+          left: 15px;
+          width: 44px;
+          height: 44px;
+          background: #fffffff2;
+          color: #FFFFFF;
+          border: 1px solid #FFFFFF;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          padding: 0;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .floating-menu-btn img {
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
+        }
+
+        /* BOTTOM NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 70px;
+            max-width: 130px;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-btn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            margin-bottom: 4px;
+        }
+
+        .bottom-nav-btn span {
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .bottom-nav-btn:hover,
+        .bottom-nav-btn.active {
+            color: #1e293b;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 480px) {
+            .bottom-nav {
+                gap: 10px;
+                padding: 9px 4px;
+            }
+            .bottom-nav-btn {
+                font-size: 10px;
+                min-width: 65px;
+                max-width: 105px;
+            }
+            .bottom-nav-btn img {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .sidebar-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: rgba(0, 0, 0, 0.4);
+          z-index: 1001;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .sidebar-menu {
+          position: fixed;
+          top: 0;
+          left: -100%;
+          width: 82%;
+          max-width: 320px;
+          height: 100%;
+          background:
+            linear-gradient(rgba(248, 249, 249, 0.5), rgba(251, 253, 252, 0.5)),
+            url("../foto/Loo.jpeg") center / cover no-repeat;
+          box-shadow: 4px 0 20px rgba(0, 0, 0, 1);
+          z-index: 1002;
+          transition: left 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+        }
+
+        .sidebar-menu.active {
+          left: 0;
+        }
+
+        .sidebar-content {
+          padding: 10px 20px 30px;
+        }
+
+        .menu-section-title {
+          font-family: 'Cairo', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #1b4d3e;
+          margin: 22px 0 12px 0;
+        }
+
+        .sidebar-nav {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .sidebar-nav li {
+          margin-bottom: 14px;
+        }
+
+        .sidebar-nav a {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          text-decoration: none;
+          color: #444444;
+          font-family: 'Cairo', sans-serif;
+          font-size: 15px;
+          font-weight: 500;
+          transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .sidebar-nav a:hover {
+          color: #1b4d3e;
+          transform: translateX(4px);
+        }
+
+        .sidebar-nav img {
+          width: 22px;
+          height: 22px;
+          object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bawah-container">
+        <button id="floatingMenuBtn" class="floating-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+            <img src="../foto/menu.png" alt="Menu">
+        </button>
+
+        <!-- AREA LOGO 3D INTERAKTIF -->
+        <div class="scene" id="scene" aria-label="Logo Jamial Muslim 3D interaktif">
+            <div class="glow"></div>
+            <div class="floor-shadow"></div>
+            
+            <div class="logo-3d" id="logo3d">
+                <!-- KETEBALAN LOGO -->
+                <img src="../foto/Log.png" class="logo-layer logo-depth-1" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-2" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-3" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-4" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-5" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-6" alt="">
+                
+                <!-- LOGO DEPAN -->
+                <img src="../foto/Log.png" class="logo-layer logo-front" alt="Jamial Muslim">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>10 Malaikat & Tugasnya</h1>
+            <p>Nama-nama Malaikat Allah beserta Tugas Utamanya</p>
+        </div>
+
+        <div class="malaikat-grid" id="malaikatGrid">
+            <!-- KOTAK MALAIKAT DIISI VIA JAVASCRIPT -->
+        </div>
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div id="sidebarMenu" class="sidebar-menu">
+        <div class="sidebar-header">
+            <div class="sidebar-brand"></div>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="menu-section-title">Dashboard</div>
+            <ul class="sidebar-nav">
+                <li><a href="../index.html"><img src="../foto/home-icon-silhouette.png" alt="Beranda"> <span>Beranda</span></a></li>
+                <li><a href="wudhu.html"><img src="../foto/bills.png" alt="Wudhu"> <span>Panduan Wudhu</span></a></li>
+                <li><a href="doa-sholat.html"><img src="../foto/islam.png" alt="Doa Sholat"> <span>Doa & Praktek Sholat</span></a></li>
+                <li><a href="dzikir.html"><img src="../foto/beads.png" alt="Dzikir"> <span>Dzikir & Hadits</span></a></li>
+                <li><a href="tasbih.html"><img src="../foto/tasbih.png" alt="Tasbih"> <span>Tasbih Digital</span></a></li>
+                <li><a href="kompas.html"><img src="../foto/compass.png" alt="Arah Kiblat"> <span>Arah Kiblat</span></a></li>
+                <li><a href="alquran.html"><img src="../foto/alquran.png" alt="Al-Quran"> <span>Al-Quran</span></a></li>
+                <li><a href="asmaallah.html"><img src="../foto/faith-in-allah.png" alt="Asmaulhusna"> <span>Asmaulhusna</span></a></li>
+                <li><a href="hijriah.html"><img src="../foto/calendar.png" alt="Kalender"> <span>Kalender Hijriah</span></a></li>
+                <li><a href="tahlil.html"><img src="../foto/cemetery.png" alt="Tahlil"> <span>Tahlil</span></a></li>
+                <li><a href="nama-namanabi.html"><img src="../foto/people.png" alt="Nabi"> <span>Nama-Nama Nabi</span></a></li>
+                <li><a href="malaikat.html"><img src="../foto/angel.png" alt="Malaikat"> <span>Nama-Nama Malaikat</span></a></li>
+                <li><a href="zakat.html"><img src="../foto/transference.png" alt="Zakat"> <span>Kalkulator Zakat</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- OVERLAY BACKGROUND GELAP -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <nav class="bottom-nav">
+        <a href="../index.html" class="bottom-nav-btn active" title="Home">
+            <img src="../foto/home-icon-silhouette.png" alt="Home">
+            <span>Home</span>
+        </a>
+    </nav>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const dataMalaikat = [
+            { nomor: 1, nama: "Malaikat Jibril", tugas: "Menyampaikan Wahyu" },
+            { nomor: 2, nama: "Malaikat Mikail", tugas: "Pembagi Rezeki & Hujan" },
+            { nomor: 3, nama: "Malaikat Israfil", tugas: "Meniup Sangkakala" },
+            { nomor: 4, nama: "Malaikat Izrail", tugas: "Mencabut Nyawa" },
+            { nomor: 5, nama: "Malaikat Munkar", tugas: "Menanya di Alam Kubur" },
+            { nomor: 6, nama: "Malaikat Nakir", tugas: "Menanya di Alam Kubur" },
+            { nomor: 7, nama: "Malaikat Raqib", tugas: "Mencatat Amal Baik" },
+            { nomor: 8, nama: "Malaikat Atid", tugas: "Mencatat Amal Buruk" },
+            { nomor: 9, nama: "Malaikat Malik", tugas: "Menjaga Pintu Neraka" },
+            { nomor: 10, nama: "Malaikat Ridwan", tugas: "Menjaga Pintu Surga" }
+        ];
+
+        function generateMalaikatGrid() {
+            const grid = document.getElementById('malaikatGrid');
+            if (!grid) return;
+            
+            dataMalaikat.forEach(malaikat => {
+                const card = document.createElement('div');
+                card.className = 'malaikat-card';
+                card.innerHTML = `
+                    <div class="malaikat-nomor">#${malaikat.nomor}</div>
+                    <div class="card-content">
+                        <div class="malaikat-nama">${malaikat.nama}</div>
+                        <div class="malaikat-tugas">${malaikat.tugas}</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    navigator.clipboard.writeText(`${malaikat.nama} — ${malaikat.tugas}`);
+                    showToast(`${malaikat.nama} disalin! 📋`);
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%);
+                background: linear-gradient(135deg, #10b981, #059669); color: white;
+                padding: 8px 16px; border-radius: 20px; font-weight: 600;
+                box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+                z-index: 10000; font-family: 'Cairo', sans-serif;
+                font-size: 12px;
+                animation: toastIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'toastOut 0.3s ease-in forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 1800);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes toastIn {
+                from { transform: translateX(-50%) translateY(40px); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+            @keyframes toastOut {
+                to { transform: translateX(-50%) translateY(40px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateMalaikatGrid();
+        });
+
+        // 3D Logo Interactive & Auto Rotate Logic (Bolak-balik Kanan-Kiri)
+        const logo = document.getElementById("logo3d");
+        const scene = document.getElementById("scene");
+
+        let rotX = -20;
+        let rotY = -28;
+        let targetX = rotX;
+        let targetY = rotY;
+
+        let dragging = false;
+        let previousX = 0;
+        let previousY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
+        let lastMove = 0;
+        let lastTime = 0;
+        let autoRotate = true;
+
+        let rotateDirection = 1; // 1 = ke kanan, -1 = ke kiri
+        const maxAngleY = 45;    
+        const minAngleY = -45;   
+        const rotateSpeed = 0.6; 
+
+        function render(time = 0) {
+            const dt = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
+            lastTime = time;
+
+            if (!dragging) {
+                if (autoRotate) {
+                    targetY += rotateSpeed * rotateDirection * dt;
+
+                    if (targetY >= maxAngleY) {
+                        targetY = maxAngleY;
+                        rotateDirection = -1;
+                    } else if (targetY <= minAngleY) {
+                        targetY = minAngleY;
+                        rotateDirection = 1;
+                    }
+                }
+
+                targetX += velocityX * dt;
+                targetY += velocityY * dt;
+
+                velocityX *= Math.pow(.94, dt);
+                velocityY *= Math.pow(.94, dt);
+
+                if (Math.abs(velocityX) < .01) velocityX = 0;
+                if (Math.abs(velocityY) < .01) velocityY = 0;
+            }
+
+            rotX += (targetX - rotX) * Math.min(1, .16 * dt);
+            rotY += (targetY - rotY) * Math.min(1, .16 * dt);
+
+            if (logo) {
+                logo.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+
+        if (scene) {
+            scene.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                dragging = true;
+                autoRotate = false;
+                previousX = e.clientX;
+                previousY = e.clientY;
+                lastMove = performance.now();
+                velocityX = 0;
+                velocityY = 0;
+                scene.setPointerCapture(e.pointerId);
+                scene.style.cursor = "grabbing";
+            });
+
+            scene.addEventListener("pointermove", (e) => {
+                if (!dragging) return;
+
+                const dx = e.clientX - previousX;
+                const dy = e.clientY - previousY;
+
+                targetY += dx * .8;
+                targetX -= dy * .8;
+
+                const now = performance.now();
+                const elapsed = Math.max(1, now - lastMove);
+
+                velocityY = (dx * .8) / (elapsed / 16.67);
+                velocityX = (-dy * .8) / (elapsed / 16.67);
+
+                previousX = e.clientX;
+                previousY = e.clientY;
+                lastMove = now;
+            });
+
+            function stopDrag() {
+                if (!dragging) return;
+                dragging = false;
+                scene.style.cursor = "grab";
+                autoRotate = true;
+            }
+
+            scene.addEventListener("pointerup", stopDrag);
+            scene.addEventListener("pointercancel", stopDrag);
+            scene.addEventListener("lostpointercapture", stopDrag);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
+            if (overlay) {
+                overlay.classList.toggle('active');
+            }
+            document.body.classList.toggle('no-scroll');
+        }
+    </script>
+    <script src="../script.js"></script>
+    <script src="../voice-assistant.js"></script>
+</body>
+</html>

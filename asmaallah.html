@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nama-nama Allah</title>
+    <meta name="description" content="Mengenali 99 Asmaul Husna - Website Islami dengan berbagai fitur untuk membantu umat Muslim dalam aktivitas sehari-hari.">
+    
+    <!-- Logo website -->
+    <link rel="icon" type="image/png" href="../foto/logo.png">
+    <link rel="apple-touch-icon" href="../foto/logo.png">
+    
+    <link rel="stylesheet" href="../style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Informasi website untuk Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Jamial Muslim",
+        "url": "https://jamialmuslim.netlify.app/"
+      }
+    </script>
+    
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+      color: #FFFFFF;
+      background-color: #059669;
+      padding: 10px;
+      padding-bottom: 90px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("../foto/Unknown.jpeg");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0.8; 
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    body > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .header h1 {
+        font-size: clamp(20px, 3.5vw, 30px);
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .header p {
+        font-size: clamp(12px, 2vw, 15px);
+        opacity: 0.9;
+    }
+
+    .asmaul-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        padding-bottom: 80px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .asmaul-card {
+       background: linear-gradient(rgba(235, 235, 235, 0), rgba(255, 255, 255, 0.5)),
+       rgba(255, 255, 255, 0) url("../foto/Loo.jpeg") center / cover no-repeat;
+        backdrop-filter: blur(20px);
+        border-radius: 12px;
+        padding: 6px 4px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        text-align: center;
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .asmaul-nomor {
+        position: absolute;
+        top: 4px;
+        left: 6px;
+        color: #0b0b0b;
+        font-weight: 700;
+        font-size: 9px;
+        opacity: 0.8;
+    }
+
+    .asmaul-nama {
+        font-size: 11px;
+        font-weight: 700;
+        color: #060606;
+        margin-bottom: 2px;
+        line-height: 1.1;
+        text-align: center;
+    }
+
+    .asmaul-arti {
+        font-size: 8px;
+        color: #060606;
+        line-height: 1.1;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .asmaul-card:hover {
+        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 900px) {
+        .asmaul-grid { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    }
+    @media (max-width: 650px) {
+        .asmaul-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .asmaul-nama { font-size: 10px; }
+        .asmaul-arti { font-size: 7.5px; }
+    }
+    @media (max-width: 420px) {
+        .asmaul-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .asmaul-card { padding: 4px 2px; }
+        .asmaul-nama { font-size: 9.5px; }
+        .asmaul-arti { font-size: 7px; }
+    }
+
+    /* 3D SCENE & LOGO STYLING */
+    .scene {
+        width: 100%;
+        max-width: 240px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+        touch-action: none;
+        user-select: none;
+        cursor: grab;
+        margin: 15px auto 10px auto;
+        position: relative;
+        overflow: visible !important;
+    }
+    .scene:active { cursor: grabbing; }
+
+    .glow {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(50px);
+        opacity: .22;
+        animation: pulse 4s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+    .floor-shadow {
+        position: absolute;
+        width: 140px;
+        height: 25px;
+        margin-top: 80px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(18px);
+        opacity: .24;
+        animation: shadow 3s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .logo-3d {
+        position: relative;
+        width: 160px;
+        height: 80px;
+        transform-style: preserve-3d;
+        transform: rotateX(-8deg) rotateY(-18deg);
+        will-change: transform;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-3d img.logo-layer {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: contain !important;
+        display: block;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .logo-depth-1 { transform: translateZ(-14px); filter: brightness(.45) drop-shadow(0 4px 3px rgba(0,0,0,.4)); }
+    .logo-depth-2 { transform: translateZ(-11px); filter: brightness(.50); }
+    .logo-depth-3 { transform: translateZ(-8px); filter: brightness(.56); }
+    .logo-depth-4 { transform: translateZ(-5px); filter: brightness(.62); }
+    .logo-depth-5 { transform: translateZ(-2px); filter: brightness(.70); }
+    .logo-depth-6 { transform: translateZ(-1px); filter: brightness(.82); }
+    .logo-front   { transform: translateZ(0); filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+
+    @keyframes pulse {
+        from { opacity: .14; transform: scale(.82); }
+        to { opacity: .32; transform: scale(1.16); }
+    }
+    @keyframes shadow {
+        0%, 100% { transform: scale(1); opacity: .24; }
+        50% { transform: scale(.72); opacity: .12; }
+    }
+
+    .floating-menu-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 44px;
+      height: 44px;
+      background: #fffffff2;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .floating-menu-btn img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* Sidebar & Overlay */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 82%;
+      max-width: 320px;
+      height: 100%;
+      background: linear-gradient(rgba(248, 249, 249, 0.5), rgba(251, 253, 252, 0.5)), url("../foto/Loo.jpeg") center / cover no-repeat;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 1);
+      z-index: 1002;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-menu.active { left: 0; }
+    .sidebar-content { padding: 10px 20px 30px; }
+    .menu-section-title { font-family: 'Cairo', sans-serif; font-size: 18px; font-weight: 700; color: #1b4d3e; margin: 22px 0 12px 0; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav li { margin-bottom: 14px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 14px; text-decoration: none; color: #444444; font-family: 'Cairo', sans-serif; font-size: 15px; font-weight: 500; transition: color 0.2s ease, transform 0.2s ease; }
+    .sidebar-nav a:hover { color: #1b4d3e; transform: translateX(4px); }
+    .sidebar-nav img { width: 22px; height: 22px; object-fit: contain; }
+
+    /* Bottom Nav */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        padding: 10px 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+    }
+    .bottom-nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        min-width: 70px;
+        max-width: 130px;
+        transition: all 0.3s ease;
+    }
+    .bottom-nav-btn img { width: 24px; height: 24px; object-fit: contain; margin-bottom: 4px; }
+    .bottom-nav-btn span { text-align: center; line-height: 1.2; }
+    .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #1e293b; transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <div class="header-bawah-container">
+        <button id="floatingMenuBtn" class="floating-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+            <img src="../foto/menu.png" alt="Menu">
+        </button>
+
+        <!-- AREA LOGO 3D INTERAKTIF -->
+        <div class="scene" id="scene" aria-label="Logo Jamial Muslim 3D interaktif">
+            <div class="glow"></div>
+            <div class="floor-shadow"></div>
+            
+            <div class="logo-3d" id="logo3d">
+                <!-- KETEBALAN LOGO -->
+                <img src="../foto/Log.png" class="logo-layer logo-depth-1" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-2" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-3" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-4" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-5" alt="">
+                <img src="../foto/Log.png" class="logo-layer logo-depth-6" alt="">
+                
+                <!-- LOGO DEPAN -->
+                <img src="../foto/Log.png" class="logo-layer logo-front" alt="Jamial Muslim">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>99 Asmaul Husna</h1>
+            <p>Nama-nama Allah yang Indah beserta Artinya</p>
+        </div>
+
+        <div class="asmaul-grid" id="asmaulGrid">
+            <!-- KOTAK ASMAUL HUSNA DIISI VIA JAVASCRIPT -->
+        </div>
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div id="sidebarMenu" class="sidebar-menu">
+      <div class="sidebar-header">
+        <div class="sidebar-brand"></div>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="menu-section-title">Dashboard</div>
+        <ul class="sidebar-nav">
+          <li><a href="../index.html"><img src="../foto/home-icon-silhouette.png" alt="Beranda"> <span>Beranda</span></a></li>
+          <li><a href="wudhu.html"><img src="../foto/bills.png" alt="Wudhu"> <span>Panduan Wudhu</span></a></li>
+          <li><a href="doa-sholat.html"><img src="../foto/islam.png" alt="Doa Sholat"> <span>Doa & Praktek Sholat</span></a></li>
+          <li><a href="dzikir.html"><img src="../foto/beads.png" alt="Dzikir"> <span>Dzikir</span></a></li>
+          <li><a href="tasbih.html"><img src="../foto/tasbih.png" alt="Tasbih"> <span>Tasbih Digital</span></a></li>
+          <li><a href="kompas.html"><img src="../foto/compass.png" alt="Arah Kiblat"> <span>Arah Kiblat</span></a></li>
+          <li><a href="alquran.html"><img src="../foto/alquran.png" alt="Al-Quran"> <span>Al-Quran</span></a></li>
+          <li><a href="asmaallah.html"><img src="../foto/faith-in-allah.png" alt="Asmaulhusna"> <span>Asmaulhusna</span></a></li>
+          <li><a href="hijriah.html"><img src="../foto/calendar.png" alt="Kalender"> <span>Kalender Hijriah</span></a></li>
+          <li><a href="tahlil.html"><img src="../foto/cemetery.png" alt="Tahlil"> <span>Tahlil</span></a></li>
+          <li><a href="nama-namanabi.html"><img src="../foto/people.png" alt="Nabi"> <span>Nama-Nama Nabi</span></a></li>
+          <li><a href="malaikat.html"><img src="../foto/angel.png" alt="Malaikat"> <span>Nama-Nama Malaikat</span></a></li>
+          <li><a href="zakat.html"><img src="../foto/transference.png" alt="Zakat"> <span>Kalkulator Zakat</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Overlay Latar Belakang Gelap -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <nav class="bottom-nav">
+      <a href="../index.html" class="bottom-nav-btn active" title="Home">
+        <img src="../foto/home-icon-silhouette.png" alt="Home">
+        <span>Home</span>
+      </a>
+    </nav>
+
+    <!-- JAVASCRIPT UTAMA -->
+    <script>
+    const asmaulHusna = [
+        { nomor: 1, arab: "الرَّحْمٰنُ", nama: "Ar-Rahman", arti: "Maha Pengasih" },
+        { nomor: 2, arab: "الرَّحِيْمُ", nama: "Ar-Rahim", arti: "Maha Penyayang" },
+        { nomor: 3, arab: "الْمَلِكُ", nama: "Al-Malik", arti: "Maha Merajai" },
+        { nomor: 4, arab: "الْقُدُّوْسُ", nama: "Al-Quddus", arti: "Maha Suci" },
+        { nomor: 5, arab: "السَّلاَمُ", nama: "As-Salam", arti: "Maha Pemberi Kesejahteraan" },
+        { nomor: 6, arab: "الْمُؤْمِنُ", nama: "Al-Mu'min", arti: "Maha Pemberi Keamanan" },
+        { nomor: 7, arab: "الْمُهَيْمِنُ", nama: "Al-Muhaimin", arti: "Maha Memelihara" },
+        { nomor: 8, arab: "الْعَزِيْزُ", nama: "Al-Aziz", arti: "Maha Perkasa" },
+        { nomor: 9, arab: "الْجَبَّارُ", nama: "Al-Jabbar", arti: "Maha Kuasa" },
+        { nomor: 10, arab: "الْمُتَكَبِّرُ", nama: "Al-Mutakabbir", arti: "Maha Megah" },
+        { nomor: 11, arab: "الْخَالِقُ", nama: "Al-Khaliq", arti: "Maha Pencipta" },
+        { nomor: 12, arab: "الْبَارِئُ", nama: "Al-Bari'", arti: "Maha Pembuat" },
+        { nomor: 13, arab: "الْمُصَوِّرُ", nama: "Al-Mushawwir", arti: "Maha Membentuk" },
+        { nomor: 14, arab: "الْغَفَّارُ", nama: "Al-Ghaffar", arti: "Maha Pengampun" },
+        { nomor: 15, arab: "الْقَهَّارُ", nama: "Al-Qahhar", arti: "Maha Menundukkan" },
+        { nomor: 16, arab: "الْوَهَّابُ", nama: "Al-Wahhab", arti: "Maha Pemberi Karunia" },
+        { nomor: 17, arab: "الرَّزَّاقُ", nama: "Ar-Razzaq", arti: "Maha Pemberi Rezeki" },
+        { nomor: 18, arab: "الْفَتَّاحُ", nama: "Al-Fattah", arti: "Maha Pembuka Rahmat" },
+        { nomor: 19, arab: "الْعَلِيْمُ", nama: "Al-'Alim", arti: "Maha Mengetahui" },
+        { nomor: 20, arab: "الْقَابِضُ", nama: "Al-Qabidh", arti: "Maha Menyempitkan" },
+        { nomor: 21, arab: "الْبَاسِطُ", nama: "Al-Basith", arti: "Maha Melapangkan" },
+        { nomor: 22, arab: "الْخَافِضُ", nama: "Al-Khafidh", arti: "Maha Merendahkan" },
+        { nomor: 23, arab: "الرَّافِعُ", nama: "Ar-Rafi'", arti: "Maha Meninggikan" },
+        { nomor: 24, arab: "الْمُعِزُّ", nama: "Al-Mu'izz", arti: "Maha Memuliakan" },
+        { nomor: 25, arab: "الْمُذِلُّ", nama: "Al-Mudzill", arti: "Maha Menghinakan" },
+        { nomor: 26, arab: "السَّمِيْعُ", nama: "As-Sami'", arti: "Maha Mendengar" },
+        { nomor: 27, arab: "الْبَصِيْرُ", nama: "Al-Bashir", arti: "Maha Melihat" },
+        { nomor: 28, arab: "الْحَكَمُ", nama: "Al-Hakam", arti: "Maha Menetapkan" },
+        { nomor: 29, arab: "الْعَدْلُ", nama: "Al-'Adl", arti: "Maha Adil" },
+        { nomor: 30, arab: "اللَّطِيْفُ", nama: "Al-Latif", arti: "Maha Lembut" },
+        { nomor: 31, arab: "الْخَبِيْرُ", nama: "Al-Khabir", arti: "Maha Mengetahui Rahasia" },
+        { nomor: 32, arab: "الْحَلِيْمُ", nama: "Al-Halim", arti: "Maha Penyantun" },
+        { nomor: 33, arab: "الْعَظِيْمُ", nama: "Al-'Azim", arti: "Maha Agung" },
+        { nomor: 34, arab: "الْغَفُوْرُ", nama: "Al-Ghafur", arti: "Maha Pengampun" },
+        { nomor: 35, arab: "الشَّكُوْرُ", nama: "Asy-Syakur", arti: "Maha Mensyukuri" },
+        { nomor: 36, arab: "الْعَلِيُّ", nama: "Al-'Aliy", arti: "Maha Tinggi" },
+        { nomor: 37, arab: "الْكَبِيْرُ", nama: "Al-Kabir", arti: "Maha Besar" },
+        { nomor: 38, arab: "الْحَفِيْظُ", nama: "Al-Hafizh", arti: "Maha Memelihara" },
+        { nomor: 39, arab: "الْمُقِيْتُ", nama: "Al-Muqit", arti: "Maha Pemberi Kecukupan" },
+        { nomor: 40, arab: "الْحَسِيْبُ", nama: "Al-Hasib", arti: "Maha Membuat Perhitungan" },
+        { nomor: 41, arab: "الْجَلِيْلُ", nama: "Al-Jalil", arti: "Maha Mulia" },
+        { nomor: 42, arab: "الْكَرِيْمُ", nama: "Al-Karim", arti: "Maha Dermawan" },
+        { nomor: 43, arab: "الرَّقِيْبُ", nama: "Ar-Raqib", arti: "Maha Mengawasi" },
+        { nomor: 44, arab: "الْمُجِيْبُ", nama: "Al-Mujib", arti: "Maha Mengabulkan" },
+        { nomor: 45, arab: "الْوَاسِعُ", nama: "Al-Wasi'", arti: "Maha Luas" },
+        { nomor: 46, arab: "الْحَكِيْمُ", nama: "Al-Hakim", arti: "Maha Bijaksana" },
+        { nomor: 47, arab: "الْوَدُوْدُ", nama: "Al-Wadud", arti: "Maha Mengasihi" },
+        { nomor: 48, arab: "الْمَجِيْدُ", nama: "Al-Majid", arti: "Maha Mulia" },
+        { nomor: 49, arab: "الْبَاعِثُ", nama: "Al-Ba'its", arti: "Maha Membangkitkan" },
+        { nomor: 50, arab: "الشَّهِيْدُ", nama: "Asy-Syahid", arti: "Maha Menyaksikan" },
+        { nomor: 51, arab: "الْحَقُّ", nama: "Al-Haqq", arti: "Maha Benar" },
+        { nomor: 52, arab: "الْوَكِيْلُ", nama: "Al-Wakil", arti: "Maha Pemelihara" },
+        { nomor: 53, arab: "الْقَوِيُّ", nama: "Al-Qawiyy", arti: "Maha Kuat" },
+        { nomor: 54, arab: "الْمَتِيْنُ", nama: "Al-Matin", arti: "Maha Kokoh" },
+        { nomor: 55, arab: "الْوَلِيُّ", nama: "Al-Waliyy", arti: "Maha Pelindung" },
+        { nomor: 56, arab: "الْحَمِيْدُ", nama: "Al-Hamid", arti: "Maha Terpuji" },
+        { nomor: 57, arab: "الْمُحْصِيْ", nama: "Al-Muhshi", arti: "Maha Menghitung" },
+        { nomor: 58, arab: "الْمُبْدِئُ", nama: "Al-Mubdi'", arti: "Maha Pemula" },
+        { nomor: 59, arab: "الْمُعِيْدُ", nama: "Al-Mu'id", arti: "Maha Mengembalikan" },
+        { nomor: 60, arab: "الْمُحْيِي", nama: "Al-Muhyi", arti: "Maha Menghidupkan" },
+        { nomor: 61, arab: "الْمُمِيْتُ", nama: "Al-Mumit", arti: "Maha Mematikan" },
+        { nomor: 62, arab: "الْحَيُّ", nama: "Al-Hayy", arti: "Maha Hidup" },
+        { nomor: 63, arab: "الْقَيُّوْمُ", nama: "Al-Qayyum", arti: "Maha Berdiri Sendiri" },
+        { nomor: 64, arab: "الْوَاجِدُ", nama: "Al-Wajid", arti: "Maha Penemuan" },
+        { nomor: 65, arab: "الْمَاجِدُ", nama: "Al-Majid", arti: "Maha Mulia" },
+        { nomor: 66, arab: "الْوَاحِدُ", nama: "Al-Wahid", arti: "Maha Esa" },
+        { nomor: 67, arab: "الأَحَدُ", nama: "Al-Ahad", arti: "Maha Tunggal" },
+        { nomor: 68, arab: "الصَّمَدُ", nama: "As-Shamad", arti: "Maha Tempat Meminta" },
+        { nomor: 69, arab: "الْقَادِرُ", nama: "Al-Qadir", arti: "Maha Kuasa" },
+        { nomor: 70, arab: "الْمُقْتَدِرُ", nama: "Al-Muqtadir", arti: "Maha Menentukan" },
+        { nomor: 71, arab: "الْمُقَدِّمُ", nama: "Al-Muqaddim", arti: "Maha Mendahulukan" },
+        { nomor: 72, arab: "الْمُؤَخِّرُ", nama: "Al-Mu'akhkhir", arti: "Maha Mengakhirkan" },
+        { nomor: 73, arab: "الأَوَّلُ", nama: "Al-Awwal", arti: "Maha Awal" },
+        { nomor: 74, arab: "الأَخِرُ", nama: "Al-Akhir", arti: "Maha Akhir" },
+        { nomor: 75, arab: "الظَّاهِرُ", nama: "Az-Zahir", arti: "Maha Nyata" },
+        { nomor: 76, arab: "الْبَاطِنُ", nama: "Al-Batin", arti: "Maha Tersembunyi" },
+        { nomor: 77, arab: "الْوَالِي", nama: "Al-Wali", arti: "Maha Memerintah" },
+        { nomor: 78, arab: "الْمُتَعَالِي", nama: "Al-Muta'ali", arti: "Maha Tinggi" },
+        { nomor: 79, arab: "الْبَرُّ", nama: "Al-Barr", arti: "Maha Dermawan" },
+        { nomor: 80, arab: "التَّوَّابُ", nama: "At-Tawwab", arti: "Penerima Taubat" },
+        { nomor: 81, arab: "الْمُنْتَقِمُ", nama: "Al-Muntaqim", arti: "Pemberi Balasan" },
+        { nomor: 82, arab: "الْعَفُوُّ", nama: "Al-'Afuww", arti: "Maha Pemaaf" },
+        { nomor: 83, arab: "الرَّؤُوْفُ", nama: "Ar-Ra'uf", arti: "Maha Pengasih" },
+        { nomor: 84, arab: "مَالِكُ الْمُلْكِ", nama: "Malikul Mulk", arti: "Penguasa Kerajaan" },
+        { nomor: 85, arab: "ذُوْ الْجَلاَلِ وَالإِكْرَامِ", nama: "Dzul Jalali wal Ikram", arti: "Pemilik Keagungan" },
+        { nomor: 86, arab: "الْمُقْسِطُ", nama: "Al-Muqsith", arti: "Maha Pemberi Keadilan" },
+        { nomor: 87, arab: "الْجَامِعُ", nama: "Al-Jami'", arti: "Maha Mengumpulkan" },
+        { nomor: 88, arab: "الْغَنِيُّ", nama: "Al-Ghaniyy", arti: "Maha Kaya" },
+        { nomor: 89, arab: "الْمُغْنِيْ", nama: "Al-Mughni", arti: "Pemberi Kekayaan" },
+        { nomor: 90, arab: "الْمَانِعُ", nama: "Al-Mani'", arti: "Maha Mencegah" },
+        { nomor: 91, arab: "الضَّارُّ", nama: "Ad-Dharr", arti: "Penimpa Kemudharatan" },
+        { nomor: 92, arab: "النَّافِعُ", nama: "An-Nafi'", arti: "Maha Memberi Manfaat" },
+        { nomor: 93, arab: "النُّوْرُ", nama: "An-Nur", arti: "Maha Bercahaya" },
+        { nomor: 94, arab: "الْهَادِي", nama: "Al-Hadi", arti: "Pemberi Petunjuk" },
+        { nomor: 95, arab: "الْبَدِيْعُ", nama: "Al-Badi'", arti: "Pencipta Tiada Banding" },
+        { nomor: 96, arab: "الْبَاقِي", nama: "Al-Baqi", arti: "Maha Kekal" },
+        { nomor: 97, arab: "الْوَارِثُ", nama: "Al-Waris", arti: "Maha Pewaris" },
+        { nomor: 98, arab: "الرَّشِيْدُ", nama: "Ar-Rasyid", arti: "Maha Pandai" },
+        { nomor: 99, arab: "الصَّبُوْرُ", nama: "As-Shabur", arti: "Maha Sabar" }
+    ];
+
+    function generateAsmaulHusna() {
+        const grid = document.getElementById('asmaulGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        
+        asmaulHusna.forEach(asma => {
+            const card = document.createElement('div');
+            card.className = 'asmaul-card';
+            card.innerHTML = `
+                <div class="asmaul-nomor">#${asma.nomor}</div>
+                <div class="asmaul-arab">${asma.arab}</div>
+                <div class="asmaul-nama">${asma.nama}</div>
+                <div class="asmaul-arti">${asma.arti}</div>
+            `;
+            
+            card.addEventListener('click', () => {
+                navigator.clipboard.writeText(`${asma.arab} (${asma.nama}) — ${asma.arti}`);
+                showToast(`${asma.nama} disalin! 📋`);
+            });
+            grid.appendChild(card);
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, #10b981, #059669); color: white;
+            padding: 8px 16px; border-radius: 20px; font-weight: 600;
+            box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+            z-index: 10000; font-family: 'Cairo', sans-serif; font-size: 12px;
+            animation: toastIn 0.3s ease-out;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'toastOut 0.3s ease-in forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 1800);
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes toastIn {
+            from { transform: translateX(-50%) translateY(40px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            to { transform: translateX(-50%) translateY(40px); opacity: 0; }
+        }
+        #asmaulGrid { direction: rtl; text-align: right; }
+        .asmaul-card { direction: rtl; text-align: right; }
+        .asmaul-arab {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000;
+            margin: 5px 0;
+            direction: rtl;
+            text-align: right;
+        }
+        .asmaul-nama, .asmaul-arti, .asmaul-nomor { text-align: right; }
+    `;
+    document.head.appendChild(style);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        generateAsmaulHusna();
+    });
+
+    // 3D Logo Interactive & Auto Rotate Logic
+    const logo = document.getElementById("logo3d");
+    const scene = document.getElementById("scene");
+
+    let rotX = -20;
+    let rotY = -28;
+    let targetX = rotX;
+    let targetY = rotY;
+
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let lastMove = 0;
+    let lastTime = 0;
+    let autoRotate = true; // Diaktifkan agar berputar sendiri
+
+    // Variabel batas rotasi bolak-balik (kiri <-> kanan)
+    let rotateDirection = 1; // 1 = ke kanan, -1 = ke kiri
+    const maxAngleY = 45;    // Batas sudut mentok kanan (45 deg)
+    const minAngleY = -45;   // Batas sudut mentok kiri (-45 deg)
+    const rotateSpeed = 0.6; // Kecepatan putar otomatis
+
+    function render(time = 0) {
+        const dt = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
+        lastTime = time;
+
+        if (!dragging) {
+            if (autoRotate) {
+                // Tambahkan rotasi sesuai arah putar
+                targetY += rotateSpeed * rotateDirection * dt;
+
+                // Cek jika mentok kanan, balik arah ke kiri
+                if (targetY >= maxAngleY) {
+                    targetY = maxAngleY;
+                    rotateDirection = -1;
+                }
+                // Cek jika mentok kiri, balik arah ke kanan
+                else if (targetY <= minAngleY) {
+                    targetY = minAngleY;
+                    rotateDirection = 1;
+                }
+            }
+
+            targetX += velocityX * dt;
+            targetY += velocityY * dt;
+
+            velocityX *= Math.pow(.94, dt);
+            velocityY *= Math.pow(.94, dt);
+
+            if (Math.abs(velocityX) < .01) velocityX = 0;
+            if (Math.abs(velocityY) < .01) velocityY = 0;
+        }
+
+        rotX += (targetX - rotX) * Math.min(1, .16 * dt);
+        rotY += (targetY - rotY) * Math.min(1, .16 * dt);
+
+        logo.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+        requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+
+    scene.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        dragging = true;
+        autoRotate = false; // Berhenti otomatis saat disentuh/digeser
+        previousX = e.clientX;
+        previousY = e.clientY;
+        lastMove = performance.now();
+        velocityX = 0;
+        velocityY = 0;
+        scene.setPointerCapture(e.pointerId);
+        scene.style.cursor = "grabbing";
+    });
+
+    scene.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+
+        const dx = e.clientX - previousX;
+        const dy = e.clientY - previousY;
+
+        targetY += dx * .8;
+        targetX -= dy * .8;
+
+        const now = performance.now();
+        const elapsed = Math.max(1, now - lastMove);
+
+        velocityY = (dx * .8) / (elapsed / 16.67);
+        velocityX = (-dy * .8) / (elapsed / 16.67);
+
+        previousX = e.clientX;
+        previousY = e.clientY;
+        lastMove = now;
+    });
+
+    function stopDrag() {
+        if (!dragging) return;
+        dragging = false;
+        scene.style.cursor = "grab";
+        autoRotate = true; // Berputar otomatis kembali setelah dilepas
+    }
+
+    scene.addEventListener("pointerup", stopDrag);
+    scene.addEventListener("pointercancel", stopDrag);
+    scene.addEventListener("lostpointercapture", stopDrag);
+
+    // Fungsi untuk membuka/menutup sidebar secara langsung
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (sidebar) {
+            sidebar.classList.toggle('active');
+        }
+        if (overlay) {
+            overlay.classList.toggle('active');
+        }
+        document.body.classList.toggle('no-scroll');
+    }
+    </script>
+
+    <!-- Memanggil script utama agar toggleSidebar berfungsi -->
+    <script src="../script.js"></script>
+    <script src="../voice-assistant.js"></script>
+</body>
+</html>

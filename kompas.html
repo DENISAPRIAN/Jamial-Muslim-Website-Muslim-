@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kompas</title>
+  <meta name="description" content="Kompas - Website Islami dengan berbagai fitur untuk membantu umat Muslim dalam aktivitas sehari-hari.">
+
+  <!-- Logo website -->
+  <link rel="icon" type="image/png" href="../foto/logo.png">
+  <link rel="apple-touch-icon" href="../foto/logo.png">
+
+  <link rel="stylesheet" href="../style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Informasi website untuk Google -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Jamial Muslim",
+      "url": "https://jamialmuslim.netlify.app/"
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      color: #FFFFFF;
+      background-color: #059669;
+      padding: 10px;
+      padding-bottom: 90px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("../foto/Unknown.jpeg");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    body > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
+    }
+
+    h2 {
+      color: #E9F2EF;
+      margin-bottom: 6px;
+      font-size: 22px;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    #status-text {
+      font-size: 13px;
+      color: #f8f9fa;
+      margin-bottom: 20px;
+      transition: color 0.3s ease;
+    }
+
+    .compass-wrapper {
+      position: relative;
+      width: 290px;
+      height: 290px;
+      margin: 10px auto;
+      border-radius: 50%;
+      background: radial-gradient(
+          circle at center,
+          rgba(186, 191, 189, 0.28) 0%,
+          rgba(6,78,59,.96) 45%,
+          #052e24 100%
+        ) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.05);
+      border: 8px solid #334155;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* PATOKAN DEPAN HP (TETAP DI ATAS - SEGITIGA ORANYE) */
+    .top-pointer {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 18px solid #f59e0b;
+      z-index: 20;
+    }
+
+    /* EFEK PAS HADAP KIBLAT */
+    .compass-wrapper.aligned {
+      border-color: #10b981 !important;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5), inset 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* DIAL UTAMA KOMPAS (BERPUTAR SESUAI ARAH HP) */
+    .compass-dial {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      will-change: transform;
+    }
+
+    /* Huruf Mata Angin Utama */
+    .cardinal-mark {
+      position: absolute;
+      font-weight: 700;
+    }
+
+    .mark-n {
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ef4444;
+      font-size: 22px;
+    }
+
+    .mark-e {
+      right: 26px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FFFFFF;
+      font-size: 15px;
+    }
+
+    .mark-s {
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #FFFFFF;
+      font-size: 15px;
+    }
+
+    .mark-w {
+      left: 26px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FFFFFF;
+      font-size: 15px;
+    }
+
+    /* Angka Derajat Melingkar */
+    .deg-mark {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #FFFFFF;
+      top: 0;
+      left: 0;
+    }
+
+    .deg-mark span {
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    .deg-0 { transform: rotate(0deg); color: #ef4444; font-weight: bold; }
+    .deg-30  { transform: rotate(30deg); }
+    .deg-60  { transform: rotate(60deg); }
+    .deg-90  { transform: rotate(90deg); }
+    .deg-120 { transform: rotate(120deg); }
+    .deg-150 { transform: rotate(150deg); }
+    .deg-180 { transform: rotate(180deg); }
+    .deg-210 { transform: rotate(210deg); }
+    .deg-240 { transform: rotate(240deg); }
+    .deg-270 { transform: rotate(270deg); }
+    .deg-300 { transform: rotate(300deg); }
+    .deg-330 { transform: rotate(330deg); }
+
+    /* LAYER JARUM KIBLAT */
+    .qibla-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 5;
+      will-change: transform;
+    }
+
+    .qibla-needle {
+      position: absolute;
+      top: 20px;
+      left: calc(50% - 2.5px);
+      width: 5px;
+      height: 125px;
+      background: #D1DDD9;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.9);
+    }
+
+    .qibla-marker {
+      position: absolute;
+      top: -14px;
+      left: calc(50% - 16px);
+      width: 32px;
+      height: 32px;
+      background: #0F172A00;
+      border: 2px solid #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+    }
+
+    .center-dot {
+      width: 14px;
+      height: 14px;
+      background: #FBFFFE;
+      border-radius: 50%;
+      z-index: 10;
+      border: 2px solid #f8fafc;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .info-card {
+      width: 100%;
+      background: #FAFCFF00;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .info-box span {
+      display: block;
+      color: #FFFFFF;
+      font-size: 11px;
+    }
+
+    .info-box strong {
+      color: #FFFFFF;
+      font-size: 16px;
+    }
+
+    .btn-start {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-start:active {
+      transform: scale(0.96);
+    }
+
+    /* 3D SCENE & LOGO STYLING */
+    .scene {
+        width: 100%;
+        max-width: 240px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+        touch-action: none;
+        user-select: none;
+        cursor: grab;
+        margin: 10px auto 5px auto;
+        position: relative;
+        overflow: visible !important;
+    }
+    .scene:active { cursor: grabbing; }
+
+    .glow {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(50px);
+        opacity: .22;
+        animation: pulse 4s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+    .floor-shadow {
+        position: absolute;
+        width: 140px;
+        height: 25px;
+        margin-top: 80px;
+        border-radius: 50%;
+        background: #059669;
+        filter: blur(18px);
+        opacity: .24;
+        animation: shadow 3s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .logo-3d {
+        position: relative;
+        width: 160px;
+        height: 80px;
+        transform-style: preserve-3d;
+        transform: rotateX(-8deg) rotateY(-18deg);
+        will-change: transform;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-3d img.logo-layer {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: contain !important;
+        display: block;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .logo-depth-1 { transform: translateZ(-14px); filter: brightness(.45) drop-shadow(0 4px 3px rgba(0,0,0,.4)); }
+    .logo-depth-2 { transform: translateZ(-11px); filter: brightness(.50); }
+    .logo-depth-3 { transform: translateZ(-8px); filter: brightness(.56); }
+    .logo-depth-4 { transform: translateZ(-5px); filter: brightness(.62); }
+    .logo-depth-5 { transform: translateZ(-2px); filter: brightness(.70); }
+    .logo-depth-6 { transform: translateZ(-1px); filter: brightness(.82); }
+    .logo-front   { transform: translateZ(0); filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+
+    @keyframes pulse {
+        from { opacity: .14; transform: scale(.82); }
+        to { opacity: .32; transform: scale(1.16); }
+    }
+    @keyframes shadow {
+        0%, 100% { transform: scale(1); opacity: .24; }
+        50% { transform: scale(.72); opacity: .12; }
+    }
+
+    .floating-menu-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 44px;
+      height: 44px;
+      background: #fffffff2;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .floating-menu-btn img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* BOTTOM NAVIGATION BAR */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      padding: 10px 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .bottom-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 70px;
+      max-width: 130px;
+      transition: all 0.3s ease;
+    }
+
+    .bottom-nav-btn img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      margin-bottom: 4px;
+    }
+
+    .bottom-nav-btn span {
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .bottom-nav-btn:hover,
+    .bottom-nav-btn.active {
+      color: #1e293b;
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 480px) {
+      .bottom-nav {
+        gap: 10px;
+        padding: 9px 4px;
+      }
+      .bottom-nav-btn {
+        font-size: 10px;
+        min-width: 65px;
+        max-width: 105px;
+      }
+      .bottom-nav-btn img {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 82%;
+      max-width: 320px;
+      height: 100%;
+      background:
+        linear-gradient(rgba(248, 249, 249, 0.5), rgba(251, 253, 252, 0.5)),
+        url("../foto/Loo.jpeg") center / cover no-repeat;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 1);
+      z-index: 1002;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu.active {
+      left: 0;
+    }
+
+    .sidebar-content {
+      padding: 10px 20px 30px;
+    }
+
+    .menu-section-title {
+      font-family: 'Cairo', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1b4d3e;
+      margin: 22px 0 12px 0;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 14px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #444444;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .sidebar-nav a:hover {
+      color: #1b4d3e;
+      transform: translateX(4px);
+    }
+
+    .sidebar-nav img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header-bawah-container">
+    <button id="floatingMenuBtn" class="floating-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+      <img src="../foto/menu.png" alt="Menu">
+    </button>
+
+    <!-- AREA LOGO 3D INTERAKTIF -->
+    <div class="scene" id="scene" aria-label="Logo Jamial Muslim 3D interaktif">
+        <div class="glow"></div>
+        <div class="floor-shadow"></div>
+        
+        <div class="logo-3d" id="logo3d">
+            <!-- KETEBALAN LOGO -->
+            <img src="../foto/Log.png" class="logo-layer logo-depth-1" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-2" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-3" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-4" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-5" alt="">
+            <img src="../foto/Log.png" class="logo-layer logo-depth-6" alt="">
+            
+            <!-- LOGO DEPAN -->
+            <img src="../foto/Log.png" class="logo-layer logo-front" alt="Jamial Muslim">
+        </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Kompas Arah Kiblat</h2>
+    <p id="status-text">Sentuh tombol untuk mengaktifkan sensor</p>
+
+    <div class="compass-wrapper">
+      <!-- Patokan Atas Depan HP (Segitiga Oranye) -->
+      <div class="top-pointer"></div>
+
+      <!-- 1. Piringan Kompas Utama -->
+      <div class="compass-dial" id="compassDial">
+        <div class="deg-mark deg-0"><span>0</span></div>
+        <div class="deg-mark deg-30"><span>30</span></div>
+        <div class="deg-mark deg-60"><span>60</span></div>
+        <div class="deg-mark deg-90"><span>90</span></div>
+        <div class="deg-mark deg-120"><span>120</span></div>
+        <div class="deg-mark deg-150"><span>150</span></div>
+        <div class="deg-mark deg-180"><span>180</span></div>
+        <div class="deg-mark deg-210"><span>210</span></div>
+        <div class="deg-mark deg-240"><span>240</span></div>
+        <div class="deg-mark deg-270"><span>270</span></div>
+        <div class="deg-mark deg-300"><span>300</span></div>
+        <div class="deg-mark deg-330"><span>330</span></div>
+
+        <span class="cardinal-mark mark-n">U</span>
+        <span class="cardinal-mark mark-e">T</span>
+        <span class="cardinal-mark mark-s">S</span>
+        <span class="cardinal-mark mark-w">B</span>
+      </div>
+
+      <!-- 2. Jarum Kiblat Hijau + Marker Ka'bah -->
+      <div class="qibla-layer" id="qiblaLayer">
+        <div class="qibla-needle"></div>
+        <div class="qibla-marker">🕋</div>
+      </div>
+
+      <div class="center-dot"></div>
+    </div>
+
+    <button class="btn-start" onclick="initCompass()">Aktifkan Kompas</button>
+
+    <div class="info-card">
+      <div class="info-box">
+        <span>ARAH KIBLAT</span>
+        <strong id="qiblaDegree">-°</strong>
+      </div>
+
+      <div class="info-box">
+        <span>POSISI HP</span>
+        <strong id="headingDegree">-°</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR MENU -->
+  <div id="sidebarMenu" class="sidebar-menu">
+    <div class="sidebar-header">
+      <div class="sidebar-brand"></div>
+    </div>
+
+    <div class="sidebar-content">
+      <div class="menu-section-title">Dashboard</div>
+      <ul class="sidebar-nav">
+        <li><a href="../index.html"><img src="../foto/home-icon-silhouette.png" alt="Beranda"> <span>Beranda</span></a></li>
+        <li><a href="wudhu.html"><img src="../foto/bills.png" alt="Wudhu"> <span>Panduan Wudhu</span></a></li>
+        <li><a href="doa-sholat.html"><img src="../foto/islam.png" alt="Doa Sholat"> <span>Doa & Praktek Sholat</span></a></li>
+        <li><a href="dzikir.html"><img src="../foto/beads.png" alt="Dzikir"> <span>Dzikir & Hadits</span></a></li>
+        <li><a href="tasbih.html"><img src="../foto/tasbih.png" alt="Tasbih"> <span>Tasbih Digital</span></a></li>
+        <li><a href="kompas.html"><img src="../foto/compass.png" alt="Arah Kiblat"> <span>Arah Kiblat</span></a></li>
+        <li><a href="alquran.html"><img src="../foto/alquran.png" alt="Al-Quran"> <span>Al-Quran</span></a></li>
+        <li><a href="asmaallah.html"><img src="../foto/faith-in-allah.png" alt="Asmaulhusna"> <span>Asmaulhusna</span></a></li>
+        <li><a href="hijriah.html"><img src="../foto/calendar.png" alt="Kalender"> <span>Kalender Hijriah</span></a></li>
+        <li><a href="tahlil.html"><img src="../foto/cemetery.png" alt="Tahlil"> <span>Tahlil</span></a></li>
+        <li><a href="nama-namanabi.html"><img src="../foto/people.png" alt="Nabi"> <span>Nama-Nama Nabi</span></a></li>
+        <li><a href="malaikat.html"><img src="../foto/angel.png" alt="Malaikat"> <span>Nama-Nama Malaikat</span></a></li>
+        <li><a href="zakat.html"><img src="../foto/transference.png" alt="Zakat"> <span>Kalkulator Zakat</span></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OVERLAY BACKGROUND GELAP -->
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <nav class="bottom-nav">
+    <a href="../index.html" class="bottom-nav-btn active" title="Home">
+      <img src="../foto/home-icon-silhouette.png" alt="Home">
+      <span>Home</span>
+    </a>
+  </nav>
+
+  <script>
+    const KAABA_LAT = 21.4225;
+    const KAABA_LNG = 39.8262;
+
+    let qiblaBearing = 0;
+
+    let currentDialRotation = 0;
+    let currentQiblaRotation = 0;
+    let targetHeading = 0;
+    let isCompassActive = false;
+
+    function calculateQibla(userLat, userLng) {
+      const phiK = KAABA_LAT * Math.PI / 180;
+      const lambdaK = KAABA_LNG * Math.PI / 180;
+      const phi = userLat * Math.PI / 180;
+      const lambda = userLng * Math.PI / 180;
+
+      const y = Math.sin(lambdaK - lambda);
+      const x = Math.cos(phi) * Math.tan(phiK) -
+                Math.sin(phi) * Math.cos(lambdaK - lambda);
+
+      let qiblaRad = Math.atan2(y, x);
+      let qiblaDeg = qiblaRad * 180 / Math.PI;
+
+      return (qiblaDeg + 360) % 360;
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            qiblaBearing = calculateQibla(lat, lng);
+
+            document.getElementById('qiblaDegree').innerText =
+              Math.round(qiblaBearing) + "°";
+
+            document.getElementById('status-text').innerText =
+              "Putar HP sampai jarum 🕋 lurus ke segitiga oranye";
+          },
+          () => {
+            document.getElementById('status-text').innerText =
+              "Gagal mengakses GPS.";
+          }
+        );
+      }
+    }
+
+    function getShortestAngle(current, target) {
+      let delta = (target - current) % 360;
+
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+
+      return delta;
+    }
+
+    function renderLoop() {
+      if (isCompassActive) {
+        const targetDial = -targetHeading;
+        const targetQibla = qiblaBearing - targetHeading;
+
+        const dialDelta = getShortestAngle(
+          currentDialRotation,
+          targetDial
+        );
+
+        const qiblaDelta = getShortestAngle(
+          currentQiblaRotation,
+          targetQibla
+        );
+
+        currentDialRotation += dialDelta * 0.15;
+        currentQiblaRotation += qiblaDelta * 0.15;
+
+        document.getElementById('compassDial').style.transform =
+          `rotate(${currentDialRotation}deg)`;
+
+        document.getElementById('qiblaLayer').style.transform =
+          `rotate(${currentQiblaRotation}deg)`;
+
+        const currentHeadingCalc = (targetHeading + 360) % 360;
+
+        document.getElementById('headingDegree').innerText =
+          Math.round(currentHeadingCalc) + "°";
+
+        // Deteksi Posisi Pas
+        const diff = Math.abs(
+          getShortestAngle(currentHeadingCalc, qiblaBearing)
+        );
+
+        const wrapper = document.querySelector('.compass-wrapper');
+        const statusText = document.getElementById('status-text');
+
+        if (diff < 3) {
+          wrapper.classList.add('aligned');
+          statusText.innerText =
+            "✅ Posisi HP Sudah Pas Hadap Kiblat!";
+          statusText.style.color = "#10b981";
+        } else {
+          wrapper.classList.remove('aligned');
+          statusText.innerText =
+            "Putar HP sampai jarum 🕋 lurus ke segitiga oranye";
+          statusText.style.color = "#94a3b8";
+        }
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    function handleOrientation(event) {
+      let heading = null;
+
+      if (event.webkitCompassHeading) {
+        heading = event.webkitCompassHeading;
+      } else if (event.alpha !== null) {
+        heading = 360 - event.alpha;
+      }
+
+      if (heading !== null) {
+        targetHeading = heading;
+      }
+    }
+
+    function initCompass() {
+      getLocation();
+      isCompassActive = true;
+
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
+        DeviceOrientationEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              window.addEventListener(
+                'deviceorientation',
+                handleOrientation,
+                true
+              );
+            } else {
+              alert('Izin akses sensor ditolak.');
+            }
+          })
+          .catch(console.error);
+      } else if ('ondeviceorientationabsolute' in window) {
+        window.addEventListener(
+          'deviceorientationabsolute',
+          handleOrientation,
+          true
+        );
+      } else if ('ondeviceorientation' in window) {
+        window.addEventListener(
+          'deviceorientation',
+          handleOrientation,
+          true
+        );
+      } else {
+        alert('Perangkat tidak mendukung sensor kompas.');
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // 3D Logo Interactive & Auto Rotate Logic (Bolak-balik Kanan-Kiri)
+    const logo = document.getElementById("logo3d");
+    const scene = document.getElementById("scene");
+
+    let rotX = -20;
+    let rotY = -28;
+    let targetX = rotX;
+    let targetY = rotY;
+
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let lastMove = 0;
+    let lastTime = 0;
+    let autoRotate = true;
+
+    let rotateDirection = 1; // 1 = ke kanan, -1 = ke kiri
+    const maxAngleY = 45;    
+    const minAngleY = -45;   
+    const rotateSpeed = 0.6; 
+
+    function renderLogo3D(time = 0) {
+        const dt = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
+        lastTime = time;
+
+        if (!dragging) {
+            if (autoRotate) {
+                targetY += rotateSpeed * rotateDirection * dt;
+
+                if (targetY >= maxAngleY) {
+                    targetY = maxAngleY;
+                    rotateDirection = -1;
+                } else if (targetY <= minAngleY) {
+                    targetY = minAngleY;
+                    rotateDirection = 1;
+                }
+            }
+
+            targetX += velocityX * dt;
+            targetY += velocityY * dt;
+
+            velocityX *= Math.pow(.94, dt);
+            velocityY *= Math.pow(.94, dt);
+
+            if (Math.abs(velocityX) < .01) velocityX = 0;
+            if (Math.abs(velocityY) < .01) velocityY = 0;
+        }
+
+        rotX += (targetX - rotX) * Math.min(1, .16 * dt);
+        rotY += (targetY - rotY) * Math.min(1, .16 * dt);
+
+        if (logo) {
+            logo.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        }
+
+        requestAnimationFrame(renderLogo3D);
+    }
+
+    requestAnimationFrame(renderLogo3D);
+
+    if (scene) {
+        scene.addEventListener("pointerdown", (e) => {
+            if (e.pointerType === "mouse" && e.button !== 0) return;
+            dragging = true;
+            autoRotate = false;
+            previousX = e.clientX;
+            previousY = e.clientY;
+            lastMove = performance.now();
+            velocityX = 0;
+            velocityY = 0;
+            scene.setPointerCapture(e.pointerId);
+            scene.style.cursor = "grabbing";
+        });
+
+        scene.addEventListener("pointermove", (e) => {
+            if (!dragging) return;
+
+            const dx = e.clientX - previousX;
+            const dy = e.clientY - previousY;
+
+            targetY += dx * .8;
+            targetX -= dy * .8;
+
+            const now = performance.now();
+            const elapsed = Math.max(1, now - lastMove);
+
+            velocityY = (dx * .8) / (elapsed / 16.67);
+            velocityX = (-dy * .8) / (elapsed / 16.67);
+
+            previousX = e.clientX;
+            previousY = e.clientY;
+            lastMove = now;
+        });
+
+        function stopDrag() {
+            if (!dragging) return;
+            dragging = false;
+            scene.style.cursor = "grab";
+            autoRotate = true;
+        }
+
+        scene.addEventListener("pointerup", stopDrag);
+        scene.addEventListener("pointercancel", stopDrag);
+        scene.addEventListener("lostpointercapture", stopDrag);
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (sidebar) {
+            sidebar.classList.toggle('active');
+        }
+        if (overlay) {
+            overlay.classList.toggle('active');
+        }
+        document.body.classList.toggle('no-scroll');
+    }
+  </script>
+
+  <script src="../script.js"></script>
+  <script src="../voice-assistant.js"></script>
+</body>
+</html>
